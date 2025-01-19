@@ -12,6 +12,7 @@ def load_dataset():
     diabetes = datasets.load_diabetes(as_frame=True)
     return diabetes
 
+
 producer = KafkaProducer(bootstrap_servers=['host.docker.internal:9092'],
                          value_serializer=lambda x: dumps(x).encode('utf-8'))
 

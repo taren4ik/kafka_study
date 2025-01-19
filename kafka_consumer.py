@@ -42,7 +42,6 @@ consumer = KafkaConsumer(
 #     cur.close()
 
 
-
 if __name__ == '__main__':
     for message in consumer:
         message = message.value
