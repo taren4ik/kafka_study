@@ -14,8 +14,8 @@ df_diabetes = diabetes['data']
 df_diabetes['target'] = diabetes['target']
 
 #sns.heatmap(df_diabetes.corr(), annot=True)
-sns.scatterplot(df_diabetes, x='s4', y='target')
-plt.show()
+# sns.scatterplot(df_diabetes, x='s4', y='target')
+# plt.show()
 
 # Разбиваем данные для обучения
 X_train, X_test, y_train, y_test = train_test_split(
@@ -26,17 +26,17 @@ X_train, X_test, y_train, y_test = train_test_split(
 #
 #  Обучение модели
 model_linear = LinearRegression().fit(X_train, y_train)
-y_prediction=model_linear .predict(X_test)
+y_prediction = model_linear.predict(X_test)
 mae = mean_absolute_error(y_test, y_prediction)
-print(mae)
+#print(mae)
 
 with open('model.pkl', 'wb') as f:
     pickle.dump(model_linear, f)
 
-with open('model.pkl', 'rb') as f:
-    model_leaner = pickle.load(f)
-mae = mean_absolute_error(y_test, model_leaner.predict(X_test))
-print(mae)
+# with open('model.pkl', 'rb') as f:
+#     model_leaner = pickle.load(f)
+# mae = mean_absolute_error(y_test, model_leaner.predict(X_test))
+#print(mae)
 # model.fit(X_train, y_train)
 #
 # # Предсказания

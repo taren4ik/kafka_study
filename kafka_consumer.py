@@ -9,7 +9,6 @@ import json
 import psycopg2
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 host = os.getenv("DB_HOST")
@@ -18,8 +17,6 @@ schema_name = os.getenv("DB_SCHEMA")
 table_name = os.getenv("DB_TABLE_NAME")
 user = os.getenv("DB_USER")
 password = os.getenv("DB_PASS")
-
-
 
 consumer = KafkaConsumer(
     'diabet_kafka_topic',
@@ -31,25 +28,30 @@ consumer = KafkaConsumer(
 )
 
 
-# def add_connection(text):
-# """Connect Database POSTGRES."""
-#     conn = psycopg2.connect(host=host, port = 5432, database = database,
-#                             user=user, password=password)
-#     cur=conn.cursor()
-#     cur.execute("INSERT INTO ml_predict (predict) VALUES(%s)", (text,))
-#     conn.commit()
-#     conn.close()
-#     cur.close()
+def add_connection(text):
+    """Connect Database POSTGRES."""
+    conn = psycopg2.connect(host=host, port=5432, database=database,
+                            user=user,  password=password)
+    cur = conn.cursor()
+    cur.execute("INSERT INTO ml.ml_predict (predict) VALUES(%s)", (text,))
+
+    conn.commit()
+    conn.close()
+    cur.close()
 
 
 if __name__ == '__main__':
     for message in consumer:
         message = message.value
-        print(message)
+        #print(message)
         with open('model.pkl', 'rb') as f:
             model_forest = pickle.load(f)
-        print(list(message.values()))
-        print(np.array(list(message.values())))
-        print(np.array(list(message.values())).reshape(1, -1))
-        print(model_forest.predict(np.array(list(message.values())).reshape(1, -1)))
-
+        # print(list(message.values()))
+        # print(np.array(list(message.values())))
+        # print(np.array(list(message.values())).reshape(1, -1))
+        print(model_forest.predict(np.array(list(message.values(
+        ))).reshape(1, -1)))
+        response = requests.post(url="http://127.0.0.1:8000/model-predict",
+                                 data=json.dumps(message))
+        print(response.text)
+        add_connection(response.text)
